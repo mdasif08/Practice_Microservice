@@ -1,0 +1,27 @@
+# CLI Interface Dependencies
+
+# Core CLI framework
+click>=8.0.0
+typer>=0.9.0
+
+# Argument parsing and validation
+pydantic>=2.0.0
+argparse
+
+# User interface
+rich>=13.0.0
+colorama>=0.4.0
+
+# Error handling and logging
+loguru>=0.7.0
+
+# Data handling
+jsonlines>=3.0.0
+
+# Testing
+pytest>=7.0.0
+pytest-cov>=4.0.0
+
+# Development
+black>=22.0.0
+flake8>=5.0.0

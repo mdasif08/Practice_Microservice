@@ -1,0 +1,186 @@
+# CraftNudge AI Agent - Application Configuration
+
+# Application Settings
+app:
+  name: "CraftNudge AI Agent"
+  version: "1.0.0"
+  environment: "development"  # development, staging, production
+  debug: true
+
+# Data Store Configuration
+data_store:
+  base_path: "shared/data-store"
+  behaviors:
+    commits_file: "behaviors/commits.jsonl"
+    patterns_file: "behaviors/patterns.jsonl"
+    insights_file: "behaviors/insights.jsonl"
+  analytics:
+    metrics_file: "analytics/metrics.jsonl"
+    trends_file: "analytics/trends.jsonl"
+  notifications:
+    sent_file: "notifications/sent.jsonl"
+    preferences_file: "notifications/preferences.jsonl"
+
+# Commit Tracker Service Configuration
+commit_tracker:
+  # Git repository settings
+  git:
+    max_commit_history: 1000
+    supported_formats: ["jsonl"]
+    backup_enabled: true
+    backup_interval: "daily"
+  
+  # Data validation
+  validation:
+    require_commit_hash: true
+    require_author: true
+    require_message: true
+    max_message_length: 500
+    min_message_length: 3
+  
+  # Error handling
+  error_handling:
+    max_retries: 3
+    retry_delay: 1.0
+    graceful_fallback: true
+
+# Analytics Service Configuration
+analytics:
+  # Analysis intervals
+  intervals:
+    daily: true
+    weekly: true
+    monthly: true
+  
+  # Pattern detection
+  patterns:
+    commit_frequency_threshold: 0.1
+    message_quality_threshold: 0.7
+    productivity_threshold: 0.5
+  
+  # Metrics calculation
+  metrics:
+    activity_score_weight: 0.4
+    consistency_score_weight: 0.3
+    quality_score_weight: 0.3
+  
+  # Insight generation
+  insights:
+    max_insights_per_day: 5
+    insight_expiry_days: 30
+    personalized_recommendations: true
+
+# Notification Service Configuration
+notifications:
+  # Notification channels
+  channels:
+    email:
+      enabled: true
+      smtp_server: "localhost"
+      smtp_port: 587
+      use_tls: true
+    desktop:
+      enabled: true
+      show_duration: 5
+    webhook:
+      enabled: false
+      endpoints: []
+  
+  # Notification preferences
+  preferences:
+    default_frequency: "daily"
+    quiet_hours_start: "22:00"
+    quiet_hours_end: "08:00"
+    max_notifications_per_day: 10
+  
+  # Content settings
+  content:
+    language: "en"
+    tone: "friendly"
+    include_insights: true
+    include_recommendations: true
+
+# API Gateway Configuration
+api_gateway:
+  # Server settings
+  server:
+    host: "0.0.0.0"
+    port: 8000
+    workers: 4
+  
+  # Authentication
+  auth:
+    jwt_secret: "your-secret-key-here"
+    jwt_algorithm: "HS256"
+    token_expiry_hours: 24
+    refresh_token_expiry_days: 7
+  
+  # Rate limiting
+  rate_limiting:
+    default_limit: 100
+    default_window: 60
+    burst_limit: 200
+  
+  # CORS settings
+  cors:
+    allowed_origins: ["*"]
+    allowed_methods: ["GET", "POST", "PUT", "DELETE"]
+    allowed_headers: ["*"]
+
+# Logging Configuration
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  format: "{time:YYYY-MM-DD HH:mm:ss} | {level} | {name}:{function}:{line} | {message}"
+  file:
+    enabled: true
+    path: "logs/craftnudge.log"
+    max_size: "10MB"
+    rotation: "daily"
+    retention: "30 days"
+  
+  # Service-specific logging
+  services:
+    commit_tracker: "INFO"
+    analytics: "INFO"
+    notifications: "INFO"
+    api_gateway: "INFO"
+
+# Security Configuration
+security:
+  # Data encryption
+  encryption:
+    enabled: false
+    algorithm: "AES-256-GCM"
+    key_rotation_days: 90
+  
+  # Access control
+  access_control:
+    require_authentication: true
+    allow_anonymous_reads: false
+    admin_roles: ["admin", "superuser"]
+  
+  # Data privacy
+  privacy:
+    anonymize_commits: false
+    retention_days: 365
+    data_export_enabled: true
+
+# Performance Configuration
+performance:
+  # Caching
+  cache:
+    enabled: true
+    ttl_seconds: 300
+    max_size: 1000
+  
+  # Database optimization
+  database:
+    connection_pool_size: 10
+    query_timeout: 30
+    batch_size: 100
+  
+  # Background tasks
+  background_tasks:
+    max_workers: 4
+    task_timeout: 300
+    retry_attempts: 3

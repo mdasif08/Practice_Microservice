@@ -1,0 +1,186 @@
+# CraftNudge AI Agent - Docker Compose Configuration
+# Local Development Environment
+
+version: '3.8'
+
+services:
+  # Commit Tracker Service
+  commit-tracker:
+    build:
+      context: .
+      dockerfile: deployment/docker/Dockerfile.commit-tracker
+    container_name: craftnudge-commit-tracker
+    environment:
+      - DATA_PATH=/app/data/behaviors/commits.jsonl
+      - LOG_LEVEL=INFO
+      - PYTHONPATH=/app
+    volumes:
+      - ./shared/data-store:/app/data
+      - ./shared:/app/shared
+    ports:
+      - "8001:8000"
+    networks:
+      - craftnudge-network
+    depends_on:
+      - data-store
+    restart: unless-stopped
+
+  # Behavior Analytics Service
+  analytics:
+    build:
+      context: .
+      dockerfile: deployment/docker/Dockerfile.analytics
+    container_name: craftnudge-analytics
+    environment:
+      - ANALYTICS_INTERVAL=daily
+      - LOG_LEVEL=INFO
+      - PYTHONPATH=/app
+    volumes:
+      - ./shared/data-store:/app/data
+      - ./shared:/app/shared
+    ports:
+      - "8002:8000"
+    networks:
+      - craftnudge-network
+    depends_on:
+      - data-store
+    restart: unless-stopped
+
+  # Notification Service
+  notifications:
+    build:
+      context: .
+      dockerfile: deployment/docker/Dockerfile.notifications
+    container_name: craftnudge-notifications
+    environment:
+      - NOTIFICATION_INTERVAL=hourly
+      - LOG_LEVEL=INFO
+      - PYTHONPATH=/app
+    volumes:
+      - ./shared/data-store:/app/data
+      - ./shared:/app/shared
+    ports:
+      - "8003:8000"
+    networks:
+      - craftnudge-network
+    depends_on:
+      - data-store
+    restart: unless-stopped
+
+  # API Gateway
+  api-gateway:
+    build:
+      context: .
+      dockerfile: deployment/docker/Dockerfile.api-gateway
+    container_name: craftnudge-api-gateway
+    environment:
+      - GATEWAY_PORT=8000
+      - JWT_SECRET=your-secret-key-here
+      - LOG_LEVEL=INFO
+      - PYTHONPATH=/app
+    volumes:
+      - ./shared:/app/shared
+    ports:
+      - "8000:8000"
+    networks:
+      - craftnudge-network
+    depends_on:
+      - commit-tracker
+      - analytics
+      - notifications
+    restart: unless-stopped
+
+  # Data Store (Shared Volume)
+  data-store:
+    image: alpine:latest
+    container_name: craftnudge-data-store
+    command: >
+      sh -c "
+        mkdir -p /data/behaviors /data/analytics /data/notifications &&
+        chmod -R 777 /data &&
+        tail -f /dev/null
+      "
+    volumes:
+      - ./shared/data-store:/data
+    networks:
+      - craftnudge-network
+    restart: unless-stopped
+
+  # Redis (for caching and session storage)
+  redis:
+    image: redis:7-alpine
+    container_name: craftnudge-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - craftnudge-network
+    restart: unless-stopped
+
+  # PostgreSQL (optional - for future database migration)
+  postgres:
+    image: postgres:15-alpine
+    container_name: craftnudge-postgres
+    environment:
+      - POSTGRES_DB=craftnudge
+      - POSTGRES_USER=craftnudge
+      - POSTGRES_PASSWORD=craftnudge123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - craftnudge-network
+    restart: unless-stopped
+
+  # Prometheus (for metrics collection)
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: craftnudge-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./deployment/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    networks:
+      - craftnudge-network
+    restart: unless-stopped
+
+  # Grafana (for metrics visualization)
+  grafana:
+    image: grafana/grafana:latest
+    container_name: craftnudge-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana-data:/var/lib/grafana
+    networks:
+      - craftnudge-network
+    restart: unless-stopped
+
+volumes:
+  redis-data:
+    driver: local
+  postgres-data:
+    driver: local
+  prometheus-data:
+    driver: local
+  grafana-data:
+    driver: local
+
+networks:
+  craftnudge-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

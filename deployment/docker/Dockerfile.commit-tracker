@@ -1,0 +1,35 @@
+# Dockerfile for Commit Tracker Service
+# User Story 2.1.1: Git Commit Logger
+
+FROM python:3.11-slim
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements and install Python dependencies
+COPY services/commit-tracker-service/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy service code
+COPY services/commit-tracker-service/src/ ./src/
+COPY shared/ ./shared/
+
+# Create data directory
+RUN mkdir -p /app/data/behaviors
+
+# Set environment variables
+ENV PYTHONPATH=/app
+ENV DATA_PATH=/app/data/behaviors/commits.jsonl
+
+# Create non-root user
+RUN useradd -m -u 1000 craftnudge && \
+    chown -R craftnudge:craftnudge /app
+USER craftnudge
+
+# Default command
+CMD ["python", "src/commit_tracker.py"]

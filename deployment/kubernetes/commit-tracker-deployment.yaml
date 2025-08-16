@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: commit-tracker-service
+  labels:
+    app: craftnudge
+    service: commit-tracker
+    user-story: "2.1.1"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: craftnudge
+      service: commit-tracker
+  template:
+    metadata:
+      labels:
+        app: craftnudge
+        service: commit-tracker
+    spec:
+      containers:
+      - name: commit-tracker
+        image: craftnudge/commit-tracker:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DATA_PATH
+          value: "/app/data/behaviors/commits.jsonl"
+        - name: LOG_LEVEL
+          value: "INFO"
+        volumeMounts:
+        - name: data-volume
+          mountPath: /app/data
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+      volumes:
+      - name: data-volume
+        persistentVolumeClaim:
+          claimName: craftnudge-data-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: commit-tracker-service
+  labels:
+    app: craftnudge
+    service: commit-tracker
+spec:
+  selector:
+    app: craftnudge
+    service: commit-tracker
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8000
+  type: ClusterIP
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: craftnudge-data-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
