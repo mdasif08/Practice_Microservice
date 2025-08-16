@@ -1,27 +1,32 @@
-# CLI Interface Dependencies
+# CLI Service Dependencies - User Story 2.1.1
+# Command-line interface dependencies for commit tracking
 
-# Core CLI framework
-click>=8.0.0
+# CLI framework
+click>=8.1.7
 typer>=0.9.0
 
-# Argument parsing and validation
-pydantic>=2.0.0
-argparse
+# Rich terminal output
+rich>=13.7.0
+tabulate>=0.9.0
 
-# User interface
-rich>=13.0.0
-colorama>=0.4.0
-
-# Error handling and logging
-loguru>=0.7.0
+# Logging
+loguru>=0.7.2
 
 # Data handling
-jsonlines>=3.0.0
+jsonlines>=4.0.0
+
+# Configuration
+pyyaml>=6.0.1
 
 # Testing
-pytest>=7.0.0
-pytest-cov>=4.0.0
+pytest>=7.4.0
+pytest-mock>=3.12.0
+pytest-cov>=4.1.0
 
-# Development
-black>=22.0.0
-flake8>=5.0.0
+# Development tools
+black>=23.11.0
+flake8>=6.1.0
+mypy>=1.7.0
+
+# Type hints
+typing-extensions>=4.8.0
