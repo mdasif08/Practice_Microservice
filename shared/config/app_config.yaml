@@ -1,6 +1,4 @@
-# CraftNudge AI Agent - Application Configuration
 
-# Application Settings
 app:
   name: "CraftNudge AI Agent"
   version: "1.0.0"
@@ -184,3 +182,5 @@ performance:
     max_workers: 4
     task_timeout: 300
     retry_attempts: 3
+  #This is the app config file 
+  
