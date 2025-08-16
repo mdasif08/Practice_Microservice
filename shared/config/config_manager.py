@@ -14,9 +14,12 @@ from ..utils.error_handler import ConfigurationError
 
 logger = get_logger(__name__)
 
+<<<<<<< HEAD
 # Default configuration path
 DEFAULT_CONFIG_PATH = Path(__file__).parent / 'app_config.yaml'
 
+=======
+>>>>>>> fcfbf36 (Actual Code Implementation)
 _config_cache: Optional[Dict[str, Any]] = None
 
 
@@ -40,6 +43,7 @@ def get_config(config_path: Optional[str] = None) -> Dict[str, Any]:
     
     if config_path is None:
         # Default config path
+<<<<<<< HEAD
         config_path = DEFAULT_CONFIG_PATH
     else:
         config_path = Path(config_path)
@@ -49,6 +53,17 @@ def get_config(config_path: Optional[str] = None) -> Dict[str, Any]:
             logger.warning(f"Config file not found at {config_path}, creating default config")
             return create_default_config(config_path)
         
+=======
+        config_path = Path(__file__).parent / 'app_config.yaml'
+    
+    config_path = Path(config_path)
+    
+    if not config_path.exists():
+        logger.warning(f"Config file not found at {config_path}, creating default config")
+        create_default_config(config_path)
+    
+    try:
+>>>>>>> fcfbf36 (Actual Code Implementation)
         config = load_config_file(config_path)
         validate_config(config)
         _config_cache = config
@@ -58,9 +73,13 @@ def get_config(config_path: Optional[str] = None) -> Dict[str, Any]:
     except Exception as e:
         error_msg = f"Failed to load configuration from {config_path}: {e}"
         logger.error(error_msg)
+<<<<<<< HEAD
         # Return default config on error instead of raising exception
         logger.info("Returning default configuration due to error")
         return create_default_config(config_path)
+=======
+        raise ConfigurationError(error_msg)
+>>>>>>> fcfbf36 (Actual Code Implementation)
 
 
 def load_config_file(config_path: Path) -> Dict[str, Any]:
@@ -91,15 +110,22 @@ def load_config_file(config_path: Path) -> Dict[str, Any]:
         raise ConfigurationError(f"Failed to read configuration file: {e}")
 
 
+<<<<<<< HEAD
 def create_default_config(config_path: Path) -> Dict[str, Any]:
+=======
+def create_default_config(config_path: Path) -> None:
+>>>>>>> fcfbf36 (Actual Code Implementation)
     """
     Create a default configuration file.
     
     Args:
         config_path: Path where to create the config file
+<<<<<<< HEAD
         
     Returns:
         Default configuration dictionary
+=======
+>>>>>>> fcfbf36 (Actual Code Implementation)
     """
     default_config = {
         'app': {
@@ -178,7 +204,10 @@ def create_default_config(config_path: Path) -> Dict[str, Any]:
             yaml.dump(default_config, file, default_flow_style=False, indent=2)
         
         logger.info(f"Default configuration created at {config_path}")
+<<<<<<< HEAD
         return default_config
+=======
+>>>>>>> fcfbf36 (Actual Code Implementation)
         
     except Exception as e:
         raise ConfigurationError(f"Failed to create default configuration: {e}")

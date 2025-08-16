@@ -7,12 +7,21 @@ This module handles Git repository interaction and commit metadata extraction.
 import os
 import subprocess
 from datetime import datetime
+<<<<<<< HEAD:services/commit_tracker_service/src/git_parser.py
 from typing import Dict, List, Optional, Any, Union
 from pathlib import Path
 import json
 
 from shared.utils.logger import get_logger
 from shared.utils.error_handler import handle_error
+=======
+from typing import Dict, List, Optional, Any
+from pathlib import Path
+import json
+
+from ...shared.utils.logger import get_logger
+from ...shared.utils.error_handler import handle_error
+>>>>>>> fcfbf36 (Actual Code Implementation):services/commit-tracker-service/src/git_parser.py
 
 logger = get_logger(__name__)
 
@@ -28,15 +37,26 @@ class GitParser:
     - Handle Git command execution
     """
     
+<<<<<<< HEAD:services/commit_tracker_service/src/git_parser.py
     def __init__(self, repo_path: Union[str, Path]):
+=======
+    def __init__(self, repo_path: Path):
+>>>>>>> fcfbf36 (Actual Code Implementation):services/commit-tracker-service/src/git_parser.py
         """
         Initialize Git parser.
         
         Args:
+<<<<<<< HEAD:services/commit_tracker_service/src/git_parser.py
             repo_path: Path to Git repository (string or Path object)
         """
         self.repo_path = Path(repo_path) if isinstance(repo_path, str) else repo_path
         self.git_dir = self.repo_path / '.git'
+=======
+            repo_path: Path to Git repository
+        """
+        self.repo_path = repo_path
+        self.git_dir = repo_path / '.git'
+>>>>>>> fcfbf36 (Actual Code Implementation):services/commit-tracker-service/src/git_parser.py
         
     def is_git_repository(self) -> bool:
         """
@@ -237,9 +257,14 @@ class GitParser:
             deletions = 0
             
             for line in lines:
+<<<<<<< HEAD:services/commit_tracker_service/src/git_parser.py
                 if 'insertions' in line or 'deletions' in line:
                     # Extract numbers from line like " 2 files changed, 10 insertions(+), 5 deletions(-)"
                     # or " 1 file changed, 3 insertions(+)" or " 1 file changed, 2 deletions(-)"
+=======
+                if 'insertions' in line and 'deletions' in line:
+                    # Extract numbers from line like " 2 files changed, 10 insertions(+), 5 deletions(-)"
+>>>>>>> fcfbf36 (Actual Code Implementation):services/commit-tracker-service/src/git_parser.py
                     parts = line.split(',')
                     for part in parts:
                         if 'insertions' in part:

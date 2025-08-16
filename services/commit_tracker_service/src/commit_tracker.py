@@ -15,8 +15,13 @@ import uuid
 
 from .git_parser import GitParser
 from .data_writer import DataWriter
+<<<<<<< HEAD:services/commit_tracker_service/src/commit_tracker.py
 from shared.utils.logger import get_logger
 from shared.utils.error_handler import handle_error
+=======
+from ...shared.utils.logger import get_logger
+from ...shared.utils.error_handler import handle_error
+>>>>>>> fcfbf36 (Actual Code Implementation):services/commit-tracker-service/src/commit_tracker.py
 
 logger = get_logger(__name__)
 

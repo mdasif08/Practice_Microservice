@@ -3,6 +3,7 @@ Commit Tracker Service - User Story 2.1.1: Behavior Tracker – Git Commit Logge
 
 This package contains the commit tracking microservice.
 """
+<<<<<<< HEAD:services/commit_tracker_service/__init__.py
 
 # Import and expose the main modules
 try:
@@ -23,3 +24,5 @@ try:
 except ImportError:
     # Handle case where modules might not be available
     __all__ = []
+=======
+>>>>>>> fcfbf36 (Actual Code Implementation):services/commit-tracker-service/__init__.py

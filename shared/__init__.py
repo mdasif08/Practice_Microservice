@@ -3,6 +3,7 @@ Shared Components - User Story 2.1.1: Behavior Tracker – Git Commit Logger
 
 This package contains shared components used across all services.
 """
+<<<<<<< HEAD
 
 # Import and expose the main modules
 try:
@@ -20,3 +21,5 @@ try:
 except ImportError:
     # Handle case where modules might not be available
     __all__ = []
+=======
+>>>>>>> fcfbf36 (Actual Code Implementation)
