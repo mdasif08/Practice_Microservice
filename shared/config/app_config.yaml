@@ -19,6 +19,24 @@ data_store:
     sent_file: "notifications/sent.jsonl"
     preferences_file: "notifications/preferences.jsonl"
 
+# Services Configuration
+services:
+  commit_tracker:
+    enabled: true
+    batch_size: 100
+    max_retries: 3
+    retry_delay: 1.0
+  analytics:
+    enabled: true
+    analysis_interval: "daily"
+  notifications:
+    enabled: true
+    channels: ["email", "desktop"]
+  api_gateway:
+    enabled: true
+    port: 8000
+    host: "localhost"
+
 # Commit Tracker Service Configuration
 commit_tracker:
   # Git repository settings

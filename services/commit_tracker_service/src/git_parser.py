@@ -7,12 +7,12 @@ This module handles Git repository interaction and commit metadata extraction.
 import os
 import subprocess
 from datetime import datetime
-from typing import Dict, List, Optional, Any
+from typing import Dict, List, Optional, Any, Union
 from pathlib import Path
 import json
 
-from ...shared.utils.logger import get_logger
-from ...shared.utils.error_handler import handle_error
+from shared.utils.logger import get_logger
+from shared.utils.error_handler import handle_error
 
 logger = get_logger(__name__)
 
@@ -28,15 +28,15 @@ class GitParser:
     - Handle Git command execution
     """
     
-    def __init__(self, repo_path: Path):
+    def __init__(self, repo_path: Union[str, Path]):
         """
         Initialize Git parser.
         
         Args:
-            repo_path: Path to Git repository
+            repo_path: Path to Git repository (string or Path object)
         """
-        self.repo_path = repo_path
-        self.git_dir = repo_path / '.git'
+        self.repo_path = Path(repo_path) if isinstance(repo_path, str) else repo_path
+        self.git_dir = self.repo_path / '.git'
         
     def is_git_repository(self) -> bool:
         """
@@ -237,8 +237,9 @@ class GitParser:
             deletions = 0
             
             for line in lines:
-                if 'insertions' in line and 'deletions' in line:
+                if 'insertions' in line or 'deletions' in line:
                     # Extract numbers from line like " 2 files changed, 10 insertions(+), 5 deletions(-)"
+                    # or " 1 file changed, 3 insertions(+)" or " 1 file changed, 2 deletions(-)"
                     parts = line.split(',')
                     for part in parts:
                         if 'insertions' in part:

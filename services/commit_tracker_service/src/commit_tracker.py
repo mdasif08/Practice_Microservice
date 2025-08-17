@@ -15,8 +15,8 @@ import uuid
 
 from .git_parser import GitParser
 from .data_writer import DataWriter
-from ...shared.utils.logger import get_logger
-from ...shared.utils.error_handler import handle_error
+from shared.utils.logger import get_logger
+from shared.utils.error_handler import handle_error
 
 logger = get_logger(__name__)
 

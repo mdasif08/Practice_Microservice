@@ -36,10 +36,10 @@ def main():
         
         if repo_info['status'] == 'success':
             info = repo_info['repository_info']
-            print(f"  Path: {info.get('repository_path', 'N/A')}")
-            print(f"  Remote: {info.get('remote_url', 'N/A')}")
-            print(f"  Branch: {info.get('current_branch', 'N/A')}")
-            print(f"  Total Commits: {info.get('total_commits', 'N/A')}")
+            print(f"  Path: {info.get('repository_path') if info.get('repository_path') is not None else 'N/A'}")
+            print(f"  Remote: {info.get('remote_url') if info.get('remote_url') is not None else 'N/A'}")
+            print(f"  Branch: {info.get('current_branch') if info.get('current_branch') is not None else 'N/A'}")
+            print(f"  Total Commits: {info.get('total_commits') if info.get('total_commits') is not None else 'N/A'}")
         else:
             print(f"  ❌ Error: {repo_info.get('message', 'Unknown error')}")
             return
@@ -51,18 +51,20 @@ def main():
         if result['status'] == 'success':
             commit_data = result['commit_data']
             print(f"  ✅ Success: {result['message']}")
-            print(f"  Hash: {commit_data['hash'][:8]}")
-            print(f"  Author: {commit_data['author']}")
-            print(f"  Message: {commit_data['message']}")
-            print(f"  Date: {commit_data['commit_date']}")
-            print(f"  Files Changed: {len(commit_data['changed_files'])}")
+            hash_value = commit_data.get('hash')
+            print(f"  Hash: {hash_value[:8] if hash_value else 'N/A'}")
+            print(f"  Author: {commit_data.get('author') if commit_data.get('author') is not None else 'N/A'}")
+            print(f"  Message: {commit_data.get('message') if commit_data.get('message') is not None else 'N/A'}")
+            print(f"  Date: {commit_data.get('commit_date') if commit_data.get('commit_date') is not None else 'N/A'}")
+            print(f"  Files Changed: {len(commit_data.get('changed_files') or [])}")
             
-            if commit_data['changed_files']:
+            changed_files = commit_data.get('changed_files', [])
+            if changed_files:
                 print("  Changed Files:")
-                for file in commit_data['changed_files'][:5]:  # Show first 5 files
+                for file in changed_files[:5]:  # Show first 5 files
                     print(f"    - {file}")
-                if len(commit_data['changed_files']) > 5:
-                    print(f"    ... and {len(commit_data['changed_files']) - 5} more")
+                if len(changed_files) > 5:
+                    print(f"    ... and {len(changed_files) - 5} more")
         else:
             print(f"  ❌ Error: {result.get('error', 'Unknown error')}")
         
