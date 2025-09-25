@@ -1,0 +1,5 @@
+            - name: Clean self-hosted runner
+  # You may pin to the exact commit or the version.
+  # uses: eviden-actions/clean-self-hosted-runner@379e2a9cca9a04e458786df2417ed98139c3ba6a
+  uses: eviden-actions/clean-self-hosted-runner@v1.3.0
+          
